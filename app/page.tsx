@@ -2,15 +2,26 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import QuoteForm from "@/components/QuoteForm";
 import { BUSINESS } from "@/lib/business";
+import { getTheme } from "@/lib/settings";
+import { isTheme, lookFor } from "@/lib/theme";
+import { todayLocal } from "@/lib/format";
 
-export default function HomePage() {
+// Looked up on every visit so a new seasonal look (Admin → Settings) shows right away.
+export const dynamic = "force-dynamic";
+
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ preview?: string }> }) {
+  const { preview } = await searchParams;
+  const theme = isTheme(preview) && preview !== "auto" ? preview : await getTheme();
+  const look = lookFor(theme, todayLocal());
+
   return (
-    <>
+    <div className="season" data-look={look}>
       <SiteHeader />
 
       <main id="top">
         <section className="hero">
           <div className="sun" aria-hidden="true"></div>
+          <div className="season-art" aria-hidden="true"></div>
           <div className="wrap">
             <p className="eyebrow" style={{ color: "var(--amber)" }}>
               Serving {BUSINESS.serviceAreas.join(" · ")}
@@ -183,6 +194,6 @@ export default function HomePage() {
       </main>
 
       <SiteFooter />
-    </>
+    </div>
   );
 }

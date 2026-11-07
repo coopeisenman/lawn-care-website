@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/admin/invoices", label: "Invoices" },
   { href: "/admin/tax", label: "Taxes" },
   { href: "/admin/requests", label: "Requests" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 export default function AdminNav({ newRequests = 0 }: { newRequests?: number }) {
