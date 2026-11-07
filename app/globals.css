@@ -292,3 +292,6 @@ i.k-completed { opacity: .4; }
 .nav-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 6px; border-radius: 999px; background: var(--amber); color: var(--green-900); font-size: .75rem; font-weight: 700; }
 @media (max-width: 520px) { .details { grid-template-columns: 1fr; gap: 2px; } .details dd { margin-bottom: 10px; } }
 .panel-highlight { border-color: var(--amber); box-shadow: 0 0 0 3px #fbecd2; }
+.tab-count { display: inline-block; min-width: 20px; margin-left: 4px; padding: 0 6px; border-radius: 999px; font-size: .78rem; background: rgba(0,0,0,.06); text-align: center; }
+.admin-nav a.active .tab-count { background: rgba(255,255,255,.2); }
+.text-red { color: #8a2016; }

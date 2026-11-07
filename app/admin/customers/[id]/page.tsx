@@ -13,7 +13,7 @@ import {
   removePortalAccess,
   createInvoice,
 } from "@/lib/admin/actions";
-import { money, prettyDate, prettyTimestamp, SERVICE_LABELS, todayLocal } from "@/lib/format";
+import { money, prettyDate, prettyTimestamp, SERVICE_LABELS } from "@/lib/format";
 import ActionForm, { SubmitButton } from "@/components/admin/ActionForm";
 import ActionButton from "@/components/admin/ActionButton";
 import CustomerFields from "@/components/admin/CustomerFields";
@@ -44,7 +44,7 @@ export default async function CustomerPage({
 
   const [props, upcoming, unbilled, invs] = await Promise.all([
     db.select().from(properties).where(eq(properties.customerId, id)).orderBy(asc(properties.address)),
-    scheduledVisits({ from: todayLocal(), customerId: id }),
+    scheduledVisits({ customerId: id }), // includes past-due visits
     unbilledVisits(id),
     customerInvoices(id),
   ]);
@@ -61,7 +61,10 @@ export default async function CustomerPage({
             {[c.phone, c.email].filter(Boolean).join(" · ") || "No contact info yet"}
           </p>
         </div>
-        {c.phone && <a href={`sms:${c.phone}`} className="btn btn-outline btn-sm">Text</a>}
+        <div className="row-actions">
+          <span className={myUpcoming.length ? "badge" : "badge badge-gray"}>{myUpcoming.length ? "Active" : "Inactive"}</span>
+          {c.phone && <a href={`sms:${c.phone}`} className="btn btn-outline btn-sm">Text</a>}
+        </div>
       </div>
       {error && ERRORS[error] && <div className="notice notice-error">{ERRORS[error]}</div>}
       {portal === "on" && (
