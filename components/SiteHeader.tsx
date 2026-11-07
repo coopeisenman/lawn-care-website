@@ -12,7 +12,6 @@ export default function SiteHeader() {
       <div className="wrap nav">
         <a href="#top" className="logo" aria-label="Westward Property Care home">
           <Logo />
-          Westward Property Care
         </a>
         <button
           className="menu-btn"

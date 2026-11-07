@@ -6,9 +6,8 @@ export default function AuthShell({ children }: { children: React.ReactNode }) {
     <>
       <header>
         <div className="wrap nav">
-          <Link href="/" className="logo">
+          <Link href="/" className="logo" aria-label="Westward Property Care home">
             <Logo />
-            Westward Property Care
           </Link>
         </div>
       </header>

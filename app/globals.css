@@ -38,6 +38,8 @@ header { position: sticky; top: 0; z-index: 50; background: rgba(250,247,240,.94
 .nav { display: flex; align-items: center; justify-content: space-between; height: 70px; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-fraunces), Georgia, serif; font-weight: 700; font-size: 1.2rem; color: var(--green-900); }
 .logo svg { width: 36px; height: 36px; flex: none; }
+.logo .logo-full { height: 50px; width: auto; display: block; }
+.logo .logo-mark { height: 30px; width: auto; flex: none; display: block; }
 .nav-links { display: flex; gap: 28px; align-items: center; list-style: none; }
 .nav-links a { text-decoration: none; font-weight: 500; color: var(--ink); }
 .nav-links a:hover { color: var(--green-600); }
@@ -113,6 +115,7 @@ footer a { color: rgba(255,255,255,.85); text-decoration: none; }
 /* ===== Mobile ===== */
 @media (max-width: 860px) {
   .menu-btn { display: block; }
+  .logo .logo-full { height: 34px; }
   .nav-links { position: absolute; top: 70px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--cream); border-bottom: 1px solid #e6e1d4; display: none; padding: 10px 20px 20px; }
   .nav-links.open { display: flex; }
   .nav-links li { width: 100%; }

@@ -7,7 +7,7 @@ export default function AppHeader({ area, home }: { area: string; home: string }
     <header>
       <div className="wrap nav">
         <Link href={home} className="logo">
-          <Logo />
+          <Logo variant="mark" />
           <span>
             Westward <span className="app-area">{area}</span>
           </span>
