@@ -42,6 +42,11 @@
 4. **Payments** — Stripe invoice creation/sending, webhook → update invoice status
 5. **Customer portal** — upcoming services, invoice history (paid/unpaid), Pay button → Stripe page
 6. **Go live** — switch Stripe to live mode, connect custom domain, retire GitHub Pages
+7. **QuickBooks Online sync (later, optional)** — owner uses QuickBooks Online, ~40 invoices/month.
+   Plan: start with the QuickBooks bank feed (free). When that gets tedious, either a
+   Stripe→QuickBooks connector (compare monthly cost) or a direct sync built into the app via the
+   QuickBooks Online API: create the customer, invoice and payment in QuickBooks when an invoice
+   is sent / paid (free to run; one-time QuickBooks connection by the owner).
 
 ### Accounts the owner still needs to create
 - Cloudflare (free plan)
