@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Westward Property Care | Lawn Care & Yard Maintenance</title>
+  <meta name="description" content="Westward Property Care offers lawn mowing, edging, cleanups, mulching and year-round property care. Get a free quote today." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231f4d2c'/><path d='M12 46c8-14 14-22 20-30 6 8 12 16 20 30' fill='none' stroke='%23e9a23b' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <style>
+    /* ===== Colours — change these to re-theme the whole site ===== */
+    :root {
+      --green-900: #14321d;
+      --green-800: #1f4d2c;
+      --green-600: #2f7a45;
+      --green-100: #e8f2ea;
+      --amber: #e9a23b;
+      --amber-dark: #c9831f;
+      --cream: #faf7f0;
+      --ink: #1d2420;
+      --muted: #5b665f;
+      --radius: 14px;
+      --max: 1120px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, system-ui, sans-serif; color: var(--ink); background: var(--cream); line-height: 1.6; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    h1, h2, h3 { font-family: Fraunces, Georgia, serif; line-height: 1.15; color: var(--green-900); }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+    section { padding: 88px 0; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; font-weight: 600; color: var(--green-600); margin-bottom: 10px; }
+    .section-head { max-width: 640px; margin-bottom: 44px; }
+    .section-head h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 12px; }
+    .section-head p { color: var(--muted); font-size: 1.05rem; }
+
+    .btn { display: inline-block; padding: 14px 26px; border-radius: 999px; font-weight: 600; text-decoration: none; transition: transform .15s, background .15s; border: 0; cursor: pointer; font: inherit; font-weight: 600; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--amber); color: var(--green-900); }
+    .btn-primary:hover { background: var(--amber-dark); }
+    .btn-ghost { border: 2px solid rgba(255,255,255,.6); color: #fff; }
+    .btn-ghost:hover { background: rgba(255,255,255,.1); }
+
+    /* ===== Header ===== */
+    header { position: sticky; top: 0; z-index: 50; background: rgba(250,247,240,.94); backdrop-filter: blur(8px); border-bottom: 1px solid #e6e1d4; }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: Fraunces, serif; font-weight: 700; font-size: 1.2rem; color: var(--green-900); }
+    .logo svg { width: 36px; height: 36px; flex: none; }
+    .nav-links { display: flex; gap: 28px; align-items: center; list-style: none; }
+    .nav-links a { text-decoration: none; font-weight: 500; color: var(--ink); }
+    .nav-links a:hover { color: var(--green-600); }
+    .nav-links .btn { padding: 10px 20px; }
+    .menu-btn { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+    .menu-btn span { display: block; width: 24px; height: 2px; background: var(--green-900); margin: 5px 0; }
+
+    /* ===== Hero ===== */
+    .hero { position: relative; color: #fff; padding: 120px 0 140px; overflow: hidden;
+      background: linear-gradient(160deg, var(--green-800) 0%, var(--green-900) 70%); }
+    .hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 120px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath d='M0 70 C240 20 480 110 720 70 S1200 20 1440 60 V120 H0Z' fill='%23faf7f0'/%3E%3C/svg%3E") bottom/100% 100% no-repeat; }
+    .sun { position: absolute; right: -80px; top: 60px; width: 420px; height: 420px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(233,162,59,.55) 0%, rgba(233,162,59,.15) 45%, transparent 70%); }
+    .hero .wrap { position: relative; z-index: 1; }
+    .hero h1 { color: #fff; font-size: clamp(2.4rem, 6vw, 4rem); max-width: 760px; margin-bottom: 20px; }
+    .hero h1 em { font-style: normal; color: var(--amber); }
+    .hero p { font-size: 1.2rem; max-width: 560px; opacity: .9; margin-bottom: 34px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-badges { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 46px; font-size: .95rem; opacity: .9; }
+    .hero-badges span::before { content: "✓"; color: var(--amber); font-weight: 700; margin-right: 8px; }
+
+    /* ===== Services ===== */
+    .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    .card { background: #fff; border-radius: var(--radius); padding: 30px 26px; border: 1px solid #ece7da; transition: box-shadow .2s, transform .2s; }
+    .card:hover { box-shadow: 0 14px 36px rgba(20,50,29,.1); transform: translateY(-3px); }
+    .icon { width: 52px; height: 52px; border-radius: 12px; background: var(--green-100); display: grid; place-items: center; margin-bottom: 18px; }
+    .icon svg { width: 28px; height: 28px; stroke: var(--green-800); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .card h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: .97rem; }
+
+    /* ===== Why us ===== */
+    .why { background: var(--green-100); }
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .why-list { list-style: none; display: grid; gap: 22px; }
+    .why-list li { display: flex; gap: 16px; }
+    .why-list .num { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--green-800); color: var(--amber); display: grid; place-items: center; font-weight: 700; font-family: Fraunces, serif; }
+    .why-list h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .why-list p { color: var(--muted); }
+    .why-art { background: var(--green-800); border-radius: 22px; aspect-ratio: 4/3.4; position: relative; overflow: hidden; }
+    .why-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    /* ===== Process ===== */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; counter-reset: step; }
+    .step { padding: 28px; border-radius: var(--radius); background: #fff; border: 1px solid #ece7da; }
+    .step::before { counter-increment: step; content: "0" counter(step); font-family: Fraunces, serif; font-size: 2rem; color: var(--amber); font-weight: 700; display: block; margin-bottom: 8px; }
+    .step h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .step p { color: var(--muted); }
+
+    /* ===== Quote / contact ===== */
+    .quote { background: var(--green-900); color: #fff; }
+    .quote h2 { color: #fff; }
+    .quote .section-head p, .quote .eyebrow { color: rgba(255,255,255,.75); }
+    .quote .eyebrow { color: var(--amber); }
+    .quote-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 50px; }
+    .contact-item { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 22px; }
+    .contact-item svg { width: 24px; height: 24px; flex: none; stroke: var(--amber); fill: none; stroke-width: 2; margin-top: 3px; }
+    .contact-item strong { display: block; }
+    .contact-item a, .contact-item span { color: rgba(255,255,255,.85); text-decoration: none; }
+    form { background: #fff; color: var(--ink); border-radius: 18px; padding: 32px; display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+    form .full { grid-column: 1 / -1; }
+    label { font-size: .88rem; font-weight: 600; display: block; margin-bottom: 6px; }
+    input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid #d8d3c6; border-radius: 10px; font: inherit; background: var(--cream); }
+    input:focus, select:focus, textarea:focus { outline: 2px solid var(--green-600); border-color: transparent; }
+    textarea { min-height: 110px; resize: vertical; }
+    .form-note { font-size: .85rem; color: var(--muted); }
+
+    /* ===== Footer ===== */
+    footer { background: #0e2414; color: rgba(255,255,255,.7); padding: 36px 0; font-size: .92rem; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer a { color: rgba(255,255,255,.85); text-decoration: none; }
+
+    /* ===== Mobile ===== */
+    @media (max-width: 860px) {
+      .menu-btn { display: block; }
+      .nav-links { position: absolute; top: 70px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--cream); border-bottom: 1px solid #e6e1d4; display: none; padding: 10px 20px 20px; }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a { display: block; padding: 12px 0; }
+      .nav-links .btn { text-align: center; margin-top: 8px; }
+      .why-grid, .quote-grid { grid-template-columns: 1fr; gap: 40px; }
+      .why-art { order: -1; }
+      form { grid-template-columns: 1fr; padding: 24px; }
+      section { padding: 64px 0; }
+      .hero { padding: 80px 0 120px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================================================================
+       EDIT ME: Search this file for "EDIT" to find every placeholder
+       (town, phone number, email, hours) and replace it with your info.
+       =================================================================== -->
+
+  <header>
+    <div class="wrap nav">
+      <a href="#top" class="logo" aria-label="Westward Property Care home">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1f4d2c"/><circle cx="32" cy="40" r="11" fill="#e9a23b"/><path d="M6 46c10-6 18-8 26-8s16 2 26 8v18H6z" fill="#2f7a45"/><path d="M14 46l3-8 3 8M26 44l3-9 3 9M40 44l3-8 3 8" stroke="#14321d" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        Westward Property Care
+      </a>
+      <button class="menu-btn" aria-label="Open menu" onclick="document.querySelector('.nav-links').classList.toggle('open')"><span></span><span></span><span></span></button>
+      <ul class="nav-links" onclick="if(event.target.tagName==='A')this.classList.remove('open')">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#process">How It Works</a></li>
+        <li><a href="#quote" class="btn btn-primary">Free Quote</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="sun" aria-hidden="true"></div>
+      <div class="wrap">
+        <p class="eyebrow" style="color:var(--amber)">Serving [Your Town] &amp; surrounding areas<!-- EDIT: your service area --></p>
+        <h1>A yard you're <em>proud</em> to come home to.</h1>
+        <p>Westward Property Care keeps your lawn sharp, your beds tidy, and your property looking its best — every season, without the hassle.</p>
+        <div class="hero-actions">
+          <a href="#quote" class="btn btn-primary">Get a Free Quote</a>
+          <a href="tel:5555555555" class="btn btn-ghost">Call (555) 555-5555</a><!-- EDIT: phone number (both places on this line) -->
+        </div>
+        <div class="hero-badges">
+          <span>Free estimates</span>
+          <span>Reliable scheduling</span>
+          <span>Clean, careful work</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">What we do</p>
+          <h2>Services for every season</h2>
+          <p>From weekly mowing to seasonal cleanups, we handle the work so you can enjoy the results.</p>
+        </div>
+        <!-- EDIT: add, remove or reword services to match what you offer -->
+        <div class="grid">
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 20h18M5 20v-4M9 20v-6M13 20v-5M17 20v-7M21 20v-4"/></svg></div>
+            <h3>Lawn Mowing</h3>
+            <p>Weekly or bi-weekly mowing at the right height for a healthy, even, striped finish.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 20L20 4M4 14l6 6M14 4l6 6"/></svg></div>
+            <h3>Edging &amp; Trimming</h3>
+            <p>Crisp edges along driveways, walkways and beds, plus string trimming around every obstacle.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3c4 4 6 7 6 10a6 6 0 01-12 0c0-3 2-6 6-10zM12 21v-8"/></svg></div>
+            <h3>Spring &amp; Fall Cleanups</h3>
+            <p>Leaf removal, debris pickup and bed cleanup to get your property ready for the season ahead.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 18c3-1 5-4 9-4s6 3 9 4M3 21h18M8 14V9M12 14V7M16 14V9"/></svg></div>
+            <h3>Mulching &amp; Beds</h3>
+            <p>Fresh mulch, weeding and bed maintenance that make your landscaping stand out.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M6 3v18M18 3v18M6 8h12M6 16h12"/></svg></div>
+            <h3>Hedge &amp; Shrub Trimming</h3>
+            <p>Neat, healthy shaping for hedges and shrubs to keep things looking intentional.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/></svg></div>
+            <h3>Aeration &amp; Overseeding</h3>
+            <p>Loosen compacted soil and fill in thin spots for a thicker, greener lawn next season.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="why" class="why">
+      <div class="wrap why-grid">
+        <div>
+          <div class="section-head" style="margin-bottom:30px">
+            <p class="eyebrow">Why Westward</p>
+            <h2>Property care you don't have to think about</h2>
+          </div>
+          <ul class="why-list">
+            <li><div class="num">1</div><div><h3>We show up</h3><p>Consistent scheduling you can count on, with a heads-up if weather shifts the plan.</p></div></li>
+            <li><div class="num">2</div><div><h3>Attention to detail</h3><p>Clean lines, clippings blown off hard surfaces, and gates closed behind us — every visit.</p></div></li>
+            <li><div class="num">3</div><div><h3>Simple, honest pricing</h3><p>Clear quotes up front with no surprises on your bill.</p></div></li>
+            <li><div class="num">4</div><div><h3>Easy to reach</h3><p>Call or text with a question and get a real answer from a real person.</p></div></li>
+          </ul>
+        </div>
+        <div class="why-art" aria-hidden="true">
+          <svg viewBox="0 0 400 340" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="340" fill="#f4c27a"/>
+            <circle cx="290" cy="150" r="60" fill="#e9a23b"/>
+            <path d="M0 200 Q100 150 200 190 T400 170 V340 H0Z" fill="#2f7a45"/>
+            <path d="M0 240 Q120 200 240 235 T400 220 V340 H0Z" fill="#1f4d2c"/>
+            <g fill="#3f8f55"><rect x="0" y="280" width="400" height="16" opacity=".5"/><rect x="0" y="312" width="400" height="16" opacity=".5"/></g>
+            <g stroke="#14321d" stroke-width="3" stroke-linecap="round">
+              <path d="M60 238v-14M66 238v-18M72 238v-12M330 228v-14M336 228v-18M342 228v-12"/>
+            </g>
+            <g transform="translate(70 120)"><rect x="0" y="40" width="70" height="50" fill="#faf7f0"/><path d="M-8 44L35 8L78 44Z" fill="#14321d"/><rect x="28" y="60" width="16" height="30" fill="#1f4d2c"/></g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">How it works</p>
+          <h2>Getting started is easy</h2>
+        </div>
+        <div class="steps">
+          <div class="step"><h3>Request a quote</h3><p>Fill out the form below or give us a call — it only takes a minute.</p></div>
+          <div class="step"><h3>We take a look</h3><p>We'll check out your property and send you a clear, no-obligation price.</p></div>
+          <div class="step"><h3>Pick your schedule</h3><p>Choose one-time service or a recurring plan that fits your needs.</p></div>
+          <div class="step"><h3>Enjoy your yard</h3><p>We handle the work. You enjoy the curb appeal.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quote" class="quote">
+      <div class="wrap quote-grid">
+        <div>
+          <div class="section-head" style="margin-bottom:34px">
+            <p class="eyebrow">Free quote</p>
+            <h2>Let's get your yard looking great</h2>
+            <p>Tell us a little about your property and we'll get back to you quickly with a free estimate.</p>
+          </div>
+          <!-- EDIT: phone, email, service area, hours -->
+          <div class="contact-item"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.7a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.7.7a2 2 0 011.7 2z"/></svg><div><strong>Call or text</strong><a href="tel:5555555555">(555) 555-5555</a></div></div>
+          <div class="contact-item"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg><div><strong>Email</strong><a href="mailto:hello@example.com">hello@example.com</a></div></div>
+          <div class="contact-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-6.5 8-13a8 8 0 10-16 0c0 6.5 8 13 8 13z"/><circle cx="12" cy="9" r="3"/></svg><div><strong>Service area</strong><span>[Your Town] &amp; surrounding areas</span></div></div>
+          <div class="contact-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><div><strong>Hours</strong><span>Mon–Sat, 7am–6pm</span></div></div>
+        </div>
+
+        <!-- The form opens the visitor's email app with their details filled in.
+             EDIT: change hello@example.com in the script at the bottom of the page. -->
+        <form id="quote-form">
+          <div><label for="name">Name</label><input id="name" name="name" required autocomplete="name" /></div>
+          <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" required autocomplete="tel" /></div>
+          <div class="full"><label for="address">Property address</label><input id="address" name="address" autocomplete="street-address" /></div>
+          <div class="full"><label for="service">Service needed</label>
+            <select id="service" name="service">
+              <option>Lawn Mowing</option>
+              <option>Edging &amp; Trimming</option>
+              <option>Spring / Fall Cleanup</option>
+              <option>Mulching &amp; Beds</option>
+              <option>Hedge &amp; Shrub Trimming</option>
+              <option>Aeration &amp; Overseeding</option>
+              <option>Not sure / Multiple</option>
+            </select>
+          </div>
+          <div class="full"><label for="message">Anything else we should know?</label><textarea id="message" name="message" placeholder="Lot size, how often you'd like service, gate codes, etc."></textarea></div>
+          <div class="full"><button type="submit" class="btn btn-primary" style="width:100%">Request My Free Quote</button></div>
+          <p class="form-note full">We'll never share your information.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year"></span> Westward Property Care. All rights reserved.</span>
+      <span><a href="tel:5555555555">(555) 555-5555</a> · <a href="mailto:hello@example.com">hello@example.com</a></span><!-- EDIT -->
+    </div>
+  </footer>
+
+  <script>
+    const BUSINESS_EMAIL = "hello@example.com"; // EDIT: where quote requests are sent
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("quote-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const f = new FormData(this);
+      const body =
+        "Name: " + f.get("name") + "\n" +
+        "Phone: " + f.get("phone") + "\n" +
+        "Address: " + f.get("address") + "\n" +
+        "Service: " + f.get("service") + "\n\n" +
+        f.get("message");
+      window.location.href = "mailto:" + BUSINESS_EMAIL +
+        "?subject=" + encodeURIComponent("Quote request from " + f.get("name")) +
+        "&body=" + encodeURIComponent(body);
+    });
+  </script>
+</body>
+</html>
