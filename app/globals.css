@@ -273,3 +273,22 @@ i.k-completed { opacity: .4; }
 .history li.h-reminder::before { background: var(--amber); }
 .history li.h-undone::before { background: #b3b0a6; }
 .history .meta { display: block; }
+
+/* ===== Estimate form ===== */
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.quote-done { background: #fff; color: var(--ink); border-radius: 18px; padding: 32px; align-self: start; }
+.quote-done h3 { font-size: 1.5rem; margin-bottom: 8px; }
+.quote-done p { margin-bottom: 10px; }
+.quote-done a, .form-note a { color: var(--green-600); }
+#quote-form .notice { margin-bottom: 0; }
+.details { display: grid; grid-template-columns: 110px 1fr; gap: 12px 16px; }
+.details dt { color: var(--muted); font-size: .9rem; padding-top: 2px; }
+.details dd { min-width: 0; overflow-wrap: anywhere; }
+.details dd .row-actions { display: flex; }
+.details a { color: var(--green-600); }
+.pre { white-space: pre-wrap; }
+.status-steps { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn-current { background: var(--green-800); color: #fff; border: 2px solid var(--green-800); }
+.nav-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 6px; border-radius: 999px; background: var(--amber); color: var(--green-900); font-size: .75rem; font-weight: 700; }
+@media (max-width: 520px) { .details { grid-template-columns: 1fr; gap: 2px; } .details dd { margin-bottom: 10px; } }
+.panel-highlight { border-color: var(--amber); box-shadow: 0 0 0 3px #fbecd2; }

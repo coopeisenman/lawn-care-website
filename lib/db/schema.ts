@@ -1,6 +1,6 @@
 // Database tables. Changing this file? Run `npm run db:generate` to create a migration.
 import { sql } from "drizzle-orm";
-import { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS, INVOICE_EVENT_TYPES } from "../constants";
+import { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS, INVOICE_EVENT_TYPES, REQUEST_STATUSES, REQUEST_SERVICES } from "../constants";
 import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS };
@@ -207,4 +207,28 @@ export const invoiceEvents = sqliteTable(
     at: integer("at", { mode: "timestamp_ms" }).notNull().default(now),
   },
   (t) => [index("invoice_events_invoice_id_idx").on(t.invoiceId, t.at)],
+);
+
+// Free-estimate requests sent from the homepage form.
+export const estimateRequests = sqliteTable(
+  "estimate_requests",
+  {
+    id: id(),
+    name: text("name").notNull(),
+    phone: text("phone").notNull(),
+    email: text("email"),
+    address: text("address"),
+    city: text("city"),
+    service: text("service", { enum: REQUEST_SERVICES }).notNull(),
+    message: text("message"),
+    status: text("status", { enum: REQUEST_STATUSES }).notNull().default("new"),
+    // Your private notes (not seen by the person who asked)
+    ownerNotes: text("owner_notes"),
+    // Set when you turn the request into a customer
+    customerId: text("customer_id").references(() => customers.id, { onDelete: "set null" }),
+    // Scrambled version of the sender's internet address, only used to limit spam
+    ipHash: text("ip_hash"),
+    ...timestamps,
+  },
+  (t) => [index("estimate_requests_status_idx").on(t.status, t.createdAt), index("estimate_requests_ip_idx").on(t.ipHash, t.createdAt)],
 );

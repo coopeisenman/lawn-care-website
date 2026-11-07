@@ -44,6 +44,9 @@
    Done early: "Mark as paid" for cash/check, and a Tax records page per year (totals by month and
    service, CSV download for the accountant). ✅
 5. **Customer portal** — upcoming services, invoice history (paid/unpaid), Pay button → Stripe page
+- ✅ Estimate requests: homepage form saves requests to the admin "Requests" tab (spam trap, speed
+  check, 3/hour per sender, 30/hour total). Turn a request into a customer in one click.
+  Later: email alert to the owner for each new request (needs domain), Cloudflare Turnstile.
 6. **Go live** — switch Stripe to live mode, connect custom domain, retire GitHub Pages
 7. **QuickBooks Online sync (later, optional)** — owner uses QuickBooks Online, ~40 invoices/month.
    Plan: start with the QuickBooks bank feed (free). When that gets tedious, either a

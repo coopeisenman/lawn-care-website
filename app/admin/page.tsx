@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { and, asc, count, eq, lt } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { customers, invoices } from "@/lib/db/schema";
+import { customers, invoices, estimateRequests } from "@/lib/db/schema";
 import { daysOverdue, lastReminders } from "@/lib/admin/invoice-info";
-import { daysAgo } from "@/lib/format";
+import { daysAgo, REQUEST_SERVICE_LABELS } from "@/lib/format";
 import { requireAdmin } from "@/lib/session";
 import { scheduledVisits, unbilledVisits } from "@/lib/admin/queries";
 import { todayLocal, prettyDate, money } from "@/lib/format";
@@ -33,6 +33,11 @@ export default async function AdminHome() {
     .where(and(eq(invoices.status, "open"), lt(invoices.dueDate, today)))
     .orderBy(asc(invoices.dueDate));
   const reminded = await lastReminders(overdueInvoices.map((r) => r.invoice.id));
+  const newRequests = await db
+    .select()
+    .from(estimateRequests)
+    .where(eq(estimateRequests.status, "new"))
+    .orderBy(asc(estimateRequests.createdAt));
 
   // Group "ready to bill" by customer.
   const toBill = new Map<string, { name: string; visits: number; cents: number }>();
@@ -59,6 +64,29 @@ export default async function AdminHome() {
         <div className="stat"><strong>{toBill.size}</strong><span>Customers ready to bill</span></div>
         <div className="stat"><strong>{open.n}</strong><span>Unpaid invoices</span></div>
       </div>
+
+      {newRequests.length > 0 && (
+        <div className="panel panel-highlight">
+          <div className="panel-head">
+            <h2>New estimate requests</h2>
+            <Link href="/admin/requests" className="btn btn-outline btn-sm">See all</Link>
+          </div>
+          <ul className="list">
+            {newRequests.map((r) => (
+              <li key={r.id}>
+                <div>
+                  <Link href={`/admin/requests/${r.id}`} className="title">{r.name}</Link>
+                  <div className="meta">
+                    {REQUEST_SERVICE_LABELS[r.service]}
+                    {r.city && r.city !== "Other" && <> · {r.city}</>} · {daysAgo(r.createdAt)}
+                  </div>
+                </div>
+                <a href={`tel:${r.phone}`} className="btn btn-primary btn-sm">Call</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {overdue.length > 0 && (
         <div className="panel">

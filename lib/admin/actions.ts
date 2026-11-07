@@ -14,11 +14,12 @@ import {
   invoices,
   invoiceLineItems,
   invoiceEvents,
+  estimateRequests,
   user,
   SERVICE_TYPES,
   RECURRENCES,
 } from "../db/schema";
-import { CONTACT_METHODS } from "../constants";
+import { CONTACT_METHODS, REQUEST_STATUSES } from "../constants";
 import { requireAdmin } from "../session";
 import { nextVisitDate, addDays } from "../dates";
 import { todayLocal, SERVICE_LABELS, prettyDate } from "../format";
@@ -520,4 +521,77 @@ export async function deleteDraftInvoice(invoiceId: string) {
   await db.delete(invoices).where(and(eq(invoices.id, invoiceId), eq(invoices.status, "draft")));
   refresh();
   redirect(`/admin/customers/${inv.customerId}`);
+}
+
+/* ───────────── Estimate requests ───────────── */
+
+export async function setRequestStatus(requestId: string, status: string) {
+  await requireAdmin();
+  if (!(REQUEST_STATUSES as readonly string[]).includes(status)) return;
+  const db = await getDb();
+  await db
+    .update(estimateRequests)
+    .set({ status: status as (typeof REQUEST_STATUSES)[number] })
+    .where(eq(estimateRequests.id, requestId));
+  refresh();
+}
+
+export async function saveRequestNotes(requestId: string, _prev: ActionState, form: FormData): Promise<ActionState> {
+  await requireAdmin();
+  return handle(async () => {
+    const db = await getDb();
+    await db
+      .update(estimateRequests)
+      .set({ ownerNotes: text(form, "ownerNotes") })
+      .where(eq(estimateRequests.id, requestId));
+    refresh();
+    return { ok: "Notes saved." };
+  });
+}
+
+/** Creates a customer (and their property, if an address was given) from a request. */
+export async function convertRequestToCustomer(requestId: string) {
+  await requireAdmin();
+  const db = await getDb();
+  const r = await db.query.estimateRequests.findFirst({ where: eq(estimateRequests.id, requestId) });
+  if (!r) redirect("/admin/requests");
+  if (r.customerId) redirect(`/admin/customers/${r.customerId}`);
+
+  const customerId = crypto.randomUUID();
+  const steps = [
+    db.insert(customers).values({
+      id: customerId,
+      name: r.name,
+      phone: r.phone,
+      email: r.email,
+      notes: r.message ? `From estimate request: ${r.message}` : null,
+    }),
+    db
+      .update(estimateRequests)
+      .set({ customerId, status: r.status === "new" ? "contacted" : r.status })
+      .where(eq(estimateRequests.id, requestId)),
+  ] as const;
+  if (r.address) {
+    await db.batch([
+      ...steps,
+      db.insert(properties).values({
+        customerId,
+        address: r.address,
+        // "Other" means outside the usual towns — fill in the real city on the property page.
+        city: r.city && r.city !== "Other" ? r.city : "",
+      }),
+    ]);
+  } else {
+    await db.batch(steps);
+  }
+  refresh();
+  redirect(`/admin/customers/${customerId}?from=request`);
+}
+
+export async function deleteRequest(requestId: string) {
+  await requireAdmin();
+  const db = await getDb();
+  await db.delete(estimateRequests).where(eq(estimateRequests.id, requestId));
+  refresh();
+  redirect("/admin/requests?deleted=1");
 }

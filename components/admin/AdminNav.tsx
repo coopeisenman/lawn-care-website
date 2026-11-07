@@ -10,9 +10,10 @@ const LINKS = [
   { href: "/admin/customers", label: "Customers" },
   { href: "/admin/invoices", label: "Invoices" },
   { href: "/admin/tax", label: "Taxes" },
+  { href: "/admin/requests", label: "Requests" },
 ];
 
-export default function AdminNav() {
+export default function AdminNav({ newRequests = 0 }: { newRequests?: number }) {
   const path = usePathname();
   const nav = useRef<HTMLElement>(null);
 
@@ -30,6 +31,9 @@ export default function AdminNav() {
         return (
           <Link key={l.href} href={l.href} className={active ? "active" : ""} aria-current={active ? "page" : undefined}>
             {l.label}
+            {l.href === "/admin/requests" && newRequests > 0 && (
+              <span className="nav-count" aria-label={`${newRequests} new`}>{newRequests}</span>
+            )}
           </Link>
         );
       })}

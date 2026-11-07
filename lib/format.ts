@@ -82,3 +82,18 @@ export function reminderMessage(o: { customerName: string; ownerName: string; ce
     `If you've already paid, thank you and please ignore this! Any questions, just reply here.`
   );
 }
+
+export const REQUEST_STATUS_LABELS: Record<string, string> = {
+  new: "New",
+  contacted: "Contacted",
+  quoted: "Estimate given",
+  won: "Won",
+  lost: "Lost",
+};
+
+export const REQUEST_SERVICE_LABELS: Record<string, string> = {
+  lawn: "Lawn Service",
+  leaf: "Leaf Cleanup",
+  snow: "Snow Removal",
+  multiple: "Multiple services",
+};
