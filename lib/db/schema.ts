@@ -1,6 +1,9 @@
 // Database tables. Changing this file? Run `npm run db:generate` to create a migration.
 import { sql } from "drizzle-orm";
+import { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES } from "../constants";
 import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
+
+export { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES };
 
 const now = sql`(cast(unixepoch('subsecond') * 1000 as integer))`;
 const timestamps = {
@@ -120,9 +123,6 @@ export const properties = sqliteTable(
   (t) => [index("properties_customer_id_idx").on(t.customerId)],
 );
 
-export const SERVICE_TYPES = ["lawn", "leaf", "snow", "other"] as const;
-export const RECURRENCES = ["none", "weekly", "biweekly", "monthly"] as const;
-export const SERVICE_STATUSES = ["scheduled", "completed", "canceled"] as const;
 
 // One row per visit. A recurring visit creates the next one when it's completed.
 export const services = sqliteTable(
@@ -148,7 +148,6 @@ export const services = sqliteTable(
   ],
 );
 
-export const INVOICE_STATUSES = ["draft", "open", "paid", "void", "uncollectible"] as const;
 
 export const invoices = sqliteTable(
   "invoices",

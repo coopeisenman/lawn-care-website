@@ -24,3 +24,20 @@ export function prettyDate(ymd: string) {
 export function todayLocal() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago" }).format(new Date());
 }
+
+export const RECURRENCE_LABELS: Record<string, string> = {
+  none: "One time",
+  weekly: "Every week",
+  biweekly: "Every 2 weeks",
+  monthly: "Every month",
+};
+
+/** Cents → "45.00" for a form input. */
+export function centsToInput(cents: number | null | undefined) {
+  return cents == null ? "" : (cents / 100).toFixed(2);
+}
+
+export function prettyTimestamp(d: Date | null | undefined) {
+  if (!d) return "";
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" });
+}

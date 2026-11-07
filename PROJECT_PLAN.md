@@ -37,7 +37,8 @@
    recurring), invoices, invoice line items. Roles: admin vs customer. Access checks in app code. ✅ built — owner password login,
    customer email-link login (emails switch on once a domain is set up)
 3. **Admin side** — manage customers & properties, schedule services, mark services completed,
-   create an invoice from completed services, send it
+   create an invoice from completed services, send it. ✅ built (sending arrives with Stripe in Phase 4).
+   Prices vary per yard: each visit has its own price, pre-filled from the last one at that property.
 4. **Payments** — Stripe invoice creation/sending, webhook → update invoice status
 5. **Customer portal** — upcoming services, invoice history (paid/unpaid), Pay button → Stripe page
 6. **Go live** — switch Stripe to live mode, connect custom domain, retire GitHub Pages
