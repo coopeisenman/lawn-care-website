@@ -21,6 +21,8 @@ import {
 } from "../db/schema";
 import { CONTACT_METHODS, REQUEST_STATUSES } from "../constants";
 import { requireAdmin } from "../session";
+import { setSetting } from "../settings";
+import { THEMES, THEME_INFO } from "../theme";
 import { nextVisitDate, addDays } from "../dates";
 import { todayLocal, SERVICE_LABELS, prettyDate } from "../format";
 import {
@@ -594,4 +596,17 @@ export async function deleteRequest(requestId: string) {
   await db.delete(estimateRequests).where(eq(estimateRequests.id, requestId));
   refresh();
   redirect("/admin/requests?deleted=1");
+}
+
+/* ───────────── Settings ───────────── */
+
+export async function saveTheme(_prev: ActionState, form: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const result = await handle(async () => {
+    const theme = oneOf(form, "theme", THEMES, "Pick a look for the website.");
+    await setSetting("theme", theme);
+    return { ok: `Saved. The website is now using the ${THEME_INFO[theme].label} look.` };
+  });
+  revalidatePath("/", "layout");
+  return result;
 }

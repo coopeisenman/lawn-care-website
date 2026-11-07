@@ -232,3 +232,13 @@ export const estimateRequests = sqliteTable(
   },
   (t) => [index("estimate_requests_status_idx").on(t.status, t.createdAt), index("estimate_requests_ip_idx").on(t.ipHash, t.createdAt)],
 );
+
+// Site-wide settings changed from Admin → Settings (for example the website's seasonal look).
+export const siteSettings = sqliteTable("site_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .notNull()
+    .default(now)
+    .$onUpdate(() => new Date()),
+});
