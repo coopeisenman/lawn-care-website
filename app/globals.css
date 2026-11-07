@@ -104,6 +104,12 @@ form { background: #fff; color: var(--ink); border-radius: 18px; padding: 32px; 
 form .full { grid-column: 1 / -1; }
 label { font-size: .88rem; font-weight: 600; display: block; margin-bottom: 6px; }
 input, select, textarea { width: 100%; padding: 12px 14px; border: 1px solid #d8d3c6; border-radius: 10px; font: inherit; background: var(--cream); }
+/* iPhone Safari gives date/time boxes a built-in min width, so they overflow narrow cards */
+input[type=date], input[type=time], input[type=datetime-local], input[type=month] {
+  display: block; min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none;
+  min-height: 48px; text-align: left;
+}
+input[type=date]::-webkit-date-and-time-value { text-align: left; }
 input:focus, select:focus, textarea:focus { outline: 2px solid var(--green-600); border-color: transparent; }
 textarea { min-height: 110px; resize: vertical; }
 .form-note { font-size: .85rem; color: var(--muted); }
@@ -172,6 +178,7 @@ footer a { color: rgba(255,255,255,.85); text-decoration: none; }
 .crumbs a { color: var(--green-600); }
 .admin-form { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; background: none; padding: 0; border-radius: 0; }
 .admin-form .full, .admin-form .notice { grid-column: 1 / -1; }
+form > *, .admin-form .two > * { min-width: 0; } /* let fields shrink to fit narrow screens */
 .admin-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .admin-form textarea { min-height: 80px; }
 .form-actions { grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
