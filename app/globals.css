@@ -192,9 +192,21 @@ footer a { color: rgba(255,255,255,.85); text-decoration: none; }
 details.panel summary { cursor: pointer; font-family: var(--font-fraunces), Georgia, serif; font-weight: 700; font-size: 1.15rem; color: var(--green-900); }
 details.panel[open] summary { margin-bottom: 16px; }
 @media (max-width: 860px) {
-  .admin-nav { gap: 2px; margin-bottom: 22px; }
-  .admin-nav a { padding: 7px 11px; font-size: .95rem; }
+  .admin-nav { position: relative; gap: 2px; margin-bottom: 22px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-left: -20px; margin-right: -20px; padding: 0 20px; }
+  .admin-nav::-webkit-scrollbar { display: none; }
+  .admin-nav a { padding: 7px 11px; font-size: .95rem; white-space: nowrap; }
   .cols { grid-template-columns: 1fr; }
   .admin-form { grid-template-columns: 1fr; }
 }
 .badge-gray { background: #eceae4; color: #4a4f4b; }
+
+.year-nav { margin-bottom: 20px; }
+.table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.table th { text-align: left; font-weight: 600; color: var(--muted); font-size: .85rem; padding: 0 8px 8px 0; border-bottom: 1px solid #ece7da; }
+.table td { padding: 10px 8px 10px 0; border-bottom: 1px solid #f0ece2; }
+.table tfoot td { font-weight: 700; border-bottom: 0; border-top: 2px solid #ece7da; }
+.table .num { text-align: right; padding-right: 0; white-space: nowrap; }
+.table a { color: var(--green-800); }
+.table-scroll { overflow-x: auto; }
+.cols { margin-bottom: 22px; }
+.cols > .panel { margin-bottom: 0; }

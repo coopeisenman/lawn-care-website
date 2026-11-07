@@ -4,8 +4,9 @@ import { asc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { invoices, invoiceLineItems, customers } from "@/lib/db/schema";
 import { requireAdmin } from "@/lib/session";
-import { addLineItem, removeLineItem, updateInvoice, deleteDraftInvoice } from "@/lib/admin/actions";
-import { money, prettyDate, prettyTimestamp } from "@/lib/format";
+import { addLineItem, removeLineItem, updateInvoice, deleteDraftInvoice, markInvoicePaid, markInvoiceUnpaid } from "@/lib/admin/actions";
+import { money, prettyDate, prettyTimestamp, todayLocal, PAYMENT_LABELS } from "@/lib/format";
+import { ymdOf } from "@/lib/admin/tax";
 import ActionForm, { SubmitButton } from "@/components/admin/ActionForm";
 import ActionButton from "@/components/admin/ActionButton";
 import InvoiceStatus from "@/components/admin/InvoiceStatus";
@@ -30,6 +31,28 @@ export default async function InvoicePage({
     db.select().from(invoiceLineItems).where(eq(invoiceLineItems.invoiceId, id)).orderBy(asc(invoiceLineItems.createdAt)),
   ]);
   const draft = inv.status === "draft";
+  const payable = (inv.status === "draft" || inv.status === "open") && inv.totalCents > 0;
+
+  const markPaidPanel = payable && (
+    <div className="panel">
+      <h2>Paid by cash or check?</h2>
+      <ActionForm action={markInvoicePaid.bind(null, id)}>
+        <div>
+          <label htmlFor="method">How</label>
+          <select id="method" name="method" defaultValue="cash">
+            <option value="cash">Cash</option>
+            <option value="check">Check</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="paidOn">Date paid</label>
+          <input id="paidOn" name="paidOn" type="date" required defaultValue={todayLocal()} max={todayLocal()} />
+        </div>
+        <div className="form-actions"><SubmitButton className="btn btn-outline btn-sm">Mark as paid</SubmitButton></div>
+      </ActionForm>
+    </div>
+  );
 
   return (
     <>
@@ -118,6 +141,7 @@ export default async function InvoicePage({
                   <div className="form-actions"><SubmitButton className="btn btn-outline btn-sm">Save</SubmitButton></div>
                 </ActionForm>
               </div>
+              {markPaidPanel}
               <ActionButton
                 action={deleteDraftInvoice.bind(null, id)}
                 confirm="Delete this draft? Its visits will go back to Ready to bill."
@@ -127,11 +151,31 @@ export default async function InvoicePage({
               </ActionButton>
             </>
           ) : (
-            inv.hostedInvoiceUrl && (
-              <a href={inv.hostedInvoiceUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
-                View on Stripe
-              </a>
-            )
+            <>
+              {inv.status === "paid" && (
+                <div className="panel">
+                  <h2>Paid</h2>
+                  <p className="meta" style={{ marginBottom: 14 }}>
+                    {PAYMENT_LABELS[inv.paymentMethod ?? "other"]} · {inv.paidAt && prettyDate(ymdOf(inv.paidAt))}
+                  </p>
+                  {inv.paymentMethod !== "stripe" && (
+                    <ActionButton
+                      action={markInvoiceUnpaid.bind(null, id)}
+                      confirm="Undo this payment? Use this only to fix a mistake."
+                      className="btn btn-outline btn-sm danger"
+                    >
+                      Undo payment
+                    </ActionButton>
+                  )}
+                </div>
+              )}
+              {markPaidPanel}
+              {inv.hostedInvoiceUrl && (
+                <a href={inv.hostedInvoiceUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
+                  View on Stripe
+                </a>
+              )}
+            </>
           )}
         </div>
       </div>

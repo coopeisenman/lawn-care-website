@@ -401,6 +401,45 @@ export async function updateInvoice(invoiceId: string, _prev: ActionState, form:
   });
 }
 
+const MANUAL_METHODS = ["cash", "check", "other"] as const;
+
+/** Records a payment made outside Stripe (cash, check, etc.). */
+export async function markInvoicePaid(invoiceId: string, _prev: ActionState, form: FormData): Promise<ActionState> {
+  await requireAdmin();
+  return handle(async () => {
+    const db = await getDb();
+    const inv = await db.query.invoices.findFirst({ where: eq(invoices.id, invoiceId) });
+    if (!inv) throw new FormError("Invoice not found.");
+    if (inv.status !== "draft" && inv.status !== "open") throw new FormError("This invoice is already closed.");
+    if (inv.totalCents <= 0) throw new FormError("This invoice has no charges.");
+    const method = oneOf(form, "method", MANUAL_METHODS, "Pick how they paid.");
+    const paidOn = dateField(form, "paidOn", "Pick the date they paid.");
+    if (paidOn > todayLocal()) throw new FormError("The payment date can't be in the future.");
+    // TODO (Phase 4): if this invoice was sent through Stripe, also mark it paid there.
+    await db
+      .update(invoices)
+      .set({ status: "paid", paymentMethod: method, paidAt: new Date(`${paidOn}T18:00:00Z`) })
+      .where(and(eq(invoices.id, invoiceId), inArray(invoices.status, ["draft", "open"])));
+    refresh();
+    revalidatePath("/portal");
+    return { ok: "Marked as paid." };
+  });
+}
+
+/** Undo a hand-recorded payment (for mistakes). Stripe payments can't be undone here. */
+export async function markInvoiceUnpaid(invoiceId: string) {
+  await requireAdmin();
+  const db = await getDb();
+  const inv = await db.query.invoices.findFirst({ where: eq(invoices.id, invoiceId) });
+  if (!inv || inv.status !== "paid" || inv.paymentMethod === "stripe") redirect(`/admin/invoices/${invoiceId}`);
+  await db
+    .update(invoices)
+    .set({ status: inv.sentAt ? "open" : "draft", paymentMethod: null, paidAt: null })
+    .where(eq(invoices.id, invoiceId));
+  refresh();
+  revalidatePath("/portal");
+}
+
 /** Deletes a draft. Its visits go back to "ready to bill". */
 export async function deleteDraftInvoice(invoiceId: string) {
   await requireAdmin();

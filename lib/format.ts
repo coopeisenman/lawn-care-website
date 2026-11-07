@@ -41,3 +41,12 @@ export function prettyTimestamp(d: Date | null | undefined) {
   if (!d) return "";
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Chicago" });
 }
+
+export const PAYMENT_LABELS: Record<string, string> = {
+  stripe: "Card / bank (Stripe)",
+  cash: "Cash",
+  check: "Check",
+  other: "Other",
+};
+
+export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

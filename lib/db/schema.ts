@@ -1,9 +1,9 @@
 // Database tables. Changing this file? Run `npm run db:generate` to create a migration.
 import { sql } from "drizzle-orm";
-import { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES } from "../constants";
+import { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS } from "../constants";
 import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 
-export { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES };
+export { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS };
 
 const now = sql`(cast(unixepoch('subsecond') * 1000 as integer))`;
 const timestamps = {
@@ -163,9 +163,13 @@ export const invoices = sqliteTable(
     hostedInvoiceUrl: text("hosted_invoice_url"),
     sentAt: integer("sent_at", { mode: "timestamp_ms" }),
     paidAt: integer("paid_at", { mode: "timestamp_ms" }),
+    // How it was paid: through Stripe, or recorded by hand (cash, check, other)
+    paymentMethod: text("payment_method", { enum: PAYMENT_METHODS }),
+    // Stripe's processing fee, filled in when Stripe reports the payment
+    feeCents: integer("fee_cents"),
     ...timestamps,
   },
-  (t) => [index("invoices_customer_id_idx").on(t.customerId)],
+  (t) => [index("invoices_customer_id_idx").on(t.customerId), index("invoices_paid_at_idx").on(t.paidAt)],
 );
 
 export const invoiceLineItems = sqliteTable(

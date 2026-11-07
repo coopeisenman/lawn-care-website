@@ -39,7 +39,10 @@
 3. **Admin side** — manage customers & properties, schedule services, mark services completed,
    create an invoice from completed services, send it. ✅ built (sending arrives with Stripe in Phase 4).
    Prices vary per yard: each visit has its own price, pre-filled from the last one at that property.
-4. **Payments** — Stripe invoice creation/sending, webhook → update invoice status
+4. **Payments** — Stripe invoice creation/sending, webhook → update invoice status; record Stripe fee on each
+   payment; save a PDF of each paid invoice to Cloudflare R2 and link it from Tax records.
+   Done early: "Mark as paid" for cash/check, and a Tax records page per year (totals by month and
+   service, CSV download for the accountant). ✅
 5. **Customer portal** — upcoming services, invoice history (paid/unpaid), Pay button → Stripe page
 6. **Go live** — switch Stripe to live mode, connect custom domain, retire GitHub Pages
 7. **QuickBooks Online sync (later, optional)** — owner uses QuickBooks Online, ~40 invoices/month.
