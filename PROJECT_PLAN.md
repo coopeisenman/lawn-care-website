@@ -19,25 +19,29 @@
 ## Goal: custom app with customer portal + admin side (no monthly fees)
 
 ### Stack
-- **Next.js** (App Router, TypeScript)
-- **Supabase** — auth (email magic-link login) + Postgres database, with row-level security
-  so customers only see their own data
+- **Next.js** (App Router, TypeScript), deployed with the OpenNext Cloudflare adapter
+- **Cloudflare Workers** — hosting (free plan allows commercial use). Auto-deploys from `main`
+  via Workers Builds connected to GitHub.
+- **Cloudflare D1** — database (SQLite). Access rules are enforced in app code: every
+  customer-facing query is filtered to the logged-in customer's own records.
+- **Logins** — email magic-link login handled by the app itself (planned: Better Auth on D1).
+  Sending login emails needs an email provider and a domain the business owns.
 - **Stripe** — Stripe Invoicing: Stripe emails the invoice and hosts the payment page
   (card + ACH). A webhook marks invoices paid in our database. Build entirely in **test mode** first.
-- **Netlify** free tier for hosting (allows commercial use)
-- Secrets go in environment variables only — never committed to the repo
+- Secrets go in Cloudflare secrets / `.dev.vars` only — never committed to the repo
 
 ### Phases
-1. **Setup** — create Next.js app in this repo; port the current homepage design into it
-2. **Database & logins** — tables: customers, properties, services (scheduled jobs; one-time or
-   recurring), invoices, invoice line items. Roles: admin vs customer. RLS policies.
+1. **Setup** — create Next.js app in this repo; port the current homepage design into it;
+   configure for Cloudflare Workers ✅
+2. **Database & logins** — D1 tables: customers, properties, services (scheduled jobs; one-time or
+   recurring), invoices, invoice line items. Roles: admin vs customer. Access checks in app code.
 3. **Admin side** — manage customers & properties, schedule services, mark services completed,
    create an invoice from completed services, send it
 4. **Payments** — Stripe invoice creation/sending, webhook → update invoice status
 5. **Customer portal** — upcoming services, invoice history (paid/unpaid), Pay button → Stripe page
-6. **Go live** — deploy to Netlify, switch Stripe to live mode, optional custom domain
+6. **Go live** — switch Stripe to live mode, connect custom domain, retire GitHub Pages
 
 ### Accounts the owner still needs to create
-- Supabase (project named `westward`)
+- Cloudflare (free plan)
 - Stripe (test mode is fine to start)
-- Netlify (sign up with GitHub)
+- A domain name (needed to send login emails; can be bought through Cloudflare)
