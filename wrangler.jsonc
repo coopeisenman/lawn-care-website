@@ -14,7 +14,7 @@
       "binding": "DB",
       "database_name": "westward-db",
       // From Cloudflare: Storage & Databases → D1 → westward-db (not a secret)
-      "database_id": "REPLACE_WITH_DATABASE_ID",
+      "database_id": "63895518-6861-402f-a65e-09e6a3602139",
       "migrations_dir": "migrations"
     }
   ],
