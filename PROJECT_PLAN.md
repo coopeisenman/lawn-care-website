@@ -34,7 +34,8 @@
 1. **Setup** — create Next.js app in this repo; port the current homepage design into it;
    configure for Cloudflare Workers ✅
 2. **Database & logins** — D1 tables: customers, properties, services (scheduled jobs; one-time or
-   recurring), invoices, invoice line items. Roles: admin vs customer. Access checks in app code.
+   recurring), invoices, invoice line items. Roles: admin vs customer. Access checks in app code. ✅ built — owner password login,
+   customer email-link login (emails switch on once a domain is set up)
 3. **Admin side** — manage customers & properties, schedule services, mark services completed,
    create an invoice from completed services, send it
 4. **Payments** — Stripe invoice creation/sending, webhook → update invoice status

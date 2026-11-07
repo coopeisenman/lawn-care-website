@@ -11,6 +11,9 @@ See `PROJECT_PLAN.md` for the full plan and phases.
 - `app/globals.css` — colors and styles (change the colors at the top to re-theme)
 - `index.html` — the original one-page site, still served by GitHub Pages until Cloudflare is live
 - `wrangler.jsonc` — Cloudflare settings (no secrets in here)
+- `lib/db/schema.ts` — database tables; `migrations/` — the SQL that creates them
+- `lib/auth.ts` — login settings; `lib/session.ts` — the admin/customer access checks
+- `/setup` — one-time page to create the owner account
 
 ## Running it on a computer (for developers)
 
@@ -20,6 +23,9 @@ npm run dev
 ```
 
 Then open http://localhost:3000.
+
+First time only: copy `.dev.vars.example` to `.dev.vars`, then run `npm run db:migrate:local`.
+Customer login links are printed in the terminal (no emails are sent locally).
 
 To test the Cloudflare version locally: `npm run preview`. To deploy by hand: `npm run deploy`.
 

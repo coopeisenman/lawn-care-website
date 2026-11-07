@@ -9,6 +9,19 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "westward-db",
+      // From Cloudflare: Storage & Databases → D1 → westward-db (not a secret)
+      "database_id": "REPLACE_WITH_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // The public address of the site (used to build login links)
+    "BETTER_AUTH_URL": "https://westward-property-care.coopeisenman.workers.dev"
+  },
   "observability": {
     "enabled": true
   }

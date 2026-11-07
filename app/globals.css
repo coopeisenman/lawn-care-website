@@ -124,3 +124,34 @@ footer a { color: rgba(255,255,255,.85); text-decoration: none; }
   section { padding: 64px 0; }
   .hero { padding: 80px 0 120px; }
 }
+
+/* ===== App pages (login, admin, customer portal) ===== */
+.btn-outline { background: transparent; border: 2px solid var(--green-800); color: var(--green-800); }
+.btn-outline:hover { background: var(--green-100); }
+.btn-sm { padding: 8px 16px; font-size: .92rem; }
+.btn:disabled { opacity: .6; cursor: default; transform: none; }
+.app-area { color: var(--green-600); font-weight: 600; }
+.app-main { padding: 44px 0 80px; min-height: calc(100vh - 70px); }
+.app-main h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); margin-bottom: 6px; }
+.app-main .lede { color: var(--muted); margin-bottom: 32px; }
+.panel { background: #fff; border: 1px solid #ece7da; border-radius: var(--radius); padding: 24px; margin-bottom: 22px; }
+.panel h2 { font-size: 1.25rem; margin-bottom: 14px; }
+.panel .empty { color: var(--muted); }
+.stats { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-bottom: 22px; }
+.stat { background: #fff; border: 1px solid #ece7da; border-radius: var(--radius); padding: 20px; }
+.stat strong { display: block; font-family: var(--font-fraunces), Georgia, serif; font-size: 2rem; color: var(--green-900); line-height: 1.1; }
+.stat span { color: var(--muted); font-size: .92rem; }
+.list { list-style: none; display: grid; }
+.list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #f0ece2; flex-wrap: wrap; }
+.list li:first-child { border-top: 0; padding-top: 0; }
+.list .meta { color: var(--muted); font-size: .92rem; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 600; background: var(--green-100); color: var(--green-800); }
+.badge-amber { background: #fbecd2; color: #8a5a12; }
+.auth-card { max-width: 440px; margin: 0 auto; background: #fff; border: 1px solid #ece7da; border-radius: 18px; padding: 32px; }
+.auth-card h1 { font-size: 1.8rem; margin-bottom: 8px; }
+.auth-card p { color: var(--muted); margin-bottom: 20px; }
+.auth-card form { padding: 0; background: none; grid-template-columns: 1fr; border-radius: 0; }
+.auth-card .small { font-size: .9rem; margin: 18px 0 0; }
+.notice { border-radius: 10px; padding: 12px 14px; font-size: .95rem; margin-bottom: 16px; }
+.notice-ok { background: var(--green-100); color: var(--green-900); }
+.notice-error { background: #fbe4e1; color: #8a2016; }

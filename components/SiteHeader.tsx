@@ -28,6 +28,7 @@ export default function SiteHeader() {
           <li><a href="#services" onClick={close}>Services</a></li>
           <li><a href="#why" onClick={close}>Why Us</a></li>
           <li><a href="#process" onClick={close}>How It Works</a></li>
+          <li><a href="/login" onClick={close}>Customer Login</a></li>
           <li><a href="#quote" className="btn btn-primary" onClick={close}>Free Estimate</a></li>
         </ul>
       </div>

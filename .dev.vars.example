@@ -1,0 +1,4 @@
+# Copy this file to .dev.vars for local development. Never commit .dev.vars.
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=make-a-long-random-string
+SETUP_CODE=any-code-you-choose
