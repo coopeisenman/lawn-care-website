@@ -50,3 +50,35 @@ export const PAYMENT_LABELS: Record<string, string> = {
 };
 
 export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export const CONTACT_LABELS: Record<string, string> = {
+  in_person: "In person",
+  text: "Text",
+  email: "Email",
+  phone: "Phone call",
+  mail: "Mail",
+  other: "Other",
+  stripe: "Stripe",
+  cash: "Cash",
+  check: "Check",
+};
+
+/** "today", "yesterday", "3 days ago" */
+export function daysAgo(d: Date) {
+  const today = todayLocal();
+  const then = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Chicago" }).format(d);
+  const n = Math.round((Date.parse(today) - Date.parse(then)) / 86_400_000);
+  return n <= 0 ? "today" : n === 1 ? "yesterday" : `${n} days ago`;
+}
+
+/** The friendly text message for a payment reminder. */
+export function reminderMessage(o: { customerName: string; ownerName: string; cents: number; dueDate: string | null; overdue: number }) {
+  const first = o.customerName.split(" ")[0];
+  const due = o.dueDate ? ` (due ${prettyDate(o.dueDate)})` : "";
+  return (
+    `Hi ${first}, this is ${o.ownerName.split(" ")[0]} with Westward Property Care. ` +
+    `Just a friendly reminder that your invoice for ${money(o.cents)}${due} ` +
+    `${o.overdue > 0 ? "is past due" : "is still open"}. ` +
+    `If you've already paid, thank you and please ignore this! Any questions, just reply here.`
+  );
+}

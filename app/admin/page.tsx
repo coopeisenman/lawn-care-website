@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { count, eq } from "drizzle-orm";
+import { and, asc, count, eq, lt } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { customers, invoices } from "@/lib/db/schema";
+import { daysOverdue, lastReminders } from "@/lib/admin/invoice-info";
+import { daysAgo } from "@/lib/format";
 import { requireAdmin } from "@/lib/session";
 import { scheduledVisits, unbilledVisits } from "@/lib/admin/queries";
 import { todayLocal, prettyDate, money } from "@/lib/format";
@@ -23,6 +25,14 @@ export default async function AdminHome() {
     db.select({ n: count() }).from(customers),
     db.select({ n: count() }).from(invoices).where(eq(invoices.status, "open")),
   ]);
+
+  const overdueInvoices = await db
+    .select({ invoice: invoices, customer: { id: customers.id, name: customers.name } })
+    .from(invoices)
+    .innerJoin(customers, eq(customers.id, invoices.customerId))
+    .where(and(eq(invoices.status, "open"), lt(invoices.dueDate, today)))
+    .orderBy(asc(invoices.dueDate));
+  const reminded = await lastReminders(overdueInvoices.map((r) => r.invoice.id));
 
   // Group "ready to bill" by customer.
   const toBill = new Map<string, { name: string; visits: number; cents: number }>();
@@ -76,6 +86,30 @@ export default async function AdminHome() {
           </ul>
         )}
       </div>
+
+      {overdueInvoices.length > 0 && (
+        <div className="panel">
+          <h2>Overdue invoices</h2>
+          <ul className="list">
+            {overdueInvoices.map(({ invoice: inv, customer }) => {
+              const last = reminded.get(inv.id);
+              return (
+                <li key={inv.id}>
+                  <div>
+                    <Link href={`/admin/invoices/${inv.id}`} className="title">
+                      {customer.name} · {money(inv.totalCents)}
+                    </Link>
+                    <div className="meta">
+                      {daysOverdue(inv, today)} days overdue · {last ? `reminded ${daysAgo(last)}` : "not reminded yet"}
+                    </div>
+                  </div>
+                  <Link href={`/admin/invoices/${inv.id}`} className="btn btn-primary btn-sm">Remind</Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
       {toBill.size > 0 && (
         <div className="panel">

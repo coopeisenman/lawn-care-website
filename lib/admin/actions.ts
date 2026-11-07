@@ -13,10 +13,12 @@ import {
   services,
   invoices,
   invoiceLineItems,
+  invoiceEvents,
   user,
   SERVICE_TYPES,
   RECURRENCES,
 } from "../db/schema";
+import { CONTACT_METHODS } from "../constants";
 import { requireAdmin } from "../session";
 import { nextVisitDate, addDays } from "../dates";
 import { todayLocal, SERVICE_LABELS, prettyDate } from "../format";
@@ -416,10 +418,13 @@ export async function markInvoicePaid(invoiceId: string, _prev: ActionState, for
     const paidOn = dateField(form, "paidOn", "Pick the date they paid.");
     if (paidOn > todayLocal()) throw new FormError("The payment date can't be in the future.");
     // TODO (Phase 4): if this invoice was sent through Stripe, also mark it paid there.
-    await db
+    const paidAt = new Date(`${paidOn}T18:00:00Z`);
+    const [updated] = await db
       .update(invoices)
-      .set({ status: "paid", paymentMethod: method, paidAt: new Date(`${paidOn}T18:00:00Z`) })
-      .where(and(eq(invoices.id, invoiceId), inArray(invoices.status, ["draft", "open"])));
+      .set({ status: "paid", paymentMethod: method, paidAt })
+      .where(and(eq(invoices.id, invoiceId), inArray(invoices.status, ["draft", "open"])))
+      .returning({ id: invoices.id });
+    if (updated) await db.insert(invoiceEvents).values({ invoiceId, type: "paid", method, at: paidAt });
     refresh();
     revalidatePath("/portal");
     return { ok: "Marked as paid." };
@@ -432,12 +437,77 @@ export async function markInvoiceUnpaid(invoiceId: string) {
   const db = await getDb();
   const inv = await db.query.invoices.findFirst({ where: eq(invoices.id, invoiceId) });
   if (!inv || inv.status !== "paid" || inv.paymentMethod === "stripe") redirect(`/admin/invoices/${invoiceId}`);
-  await db
-    .update(invoices)
-    .set({ status: inv.sentAt ? "open" : "draft", paymentMethod: null, paidAt: null })
-    .where(eq(invoices.id, invoiceId));
+  await db.batch([
+    db
+      .update(invoices)
+      .set({ status: inv.sentAt ? "open" : "draft", paymentMethod: null, paidAt: null })
+      .where(eq(invoices.id, invoiceId)),
+    db.insert(invoiceEvents).values({ invoiceId, type: "undone", note: "Payment undone" }),
+  ]);
   refresh();
   revalidatePath("/portal");
+}
+
+const SEND_METHODS = ["in_person", "text", "email", "mail", "other"] as const;
+
+/**
+ * Records that you gave the customer this invoice yourself (in person, by text, etc.).
+ * It locks the invoice and shows it in their portal as unpaid.
+ * (Phase 4 adds sending through Stripe, which will record this automatically.)
+ */
+export async function markInvoiceSent(invoiceId: string, _prev: ActionState, form: FormData): Promise<ActionState> {
+  await requireAdmin();
+  return handle(async () => {
+    const { db, inv } = await loadDraft(invoiceId);
+    if (inv.totalCents <= 0) throw new FormError("Add at least one charge first.");
+    const method = oneOf(form, "method", SEND_METHODS, "Pick how you sent it.");
+    const sentOn = dateField(form, "sentOn", "Pick the date you sent it.");
+    if (sentOn > todayLocal()) throw new FormError("The date can't be in the future.");
+    const sentAt = sentOn === todayLocal() ? new Date() : new Date(`${sentOn}T18:00:00Z`);
+    const [updated] = await db
+      .update(invoices)
+      .set({ status: "open", sentAt })
+      .where(and(eq(invoices.id, invoiceId), eq(invoices.status, "draft")))
+      .returning({ id: invoices.id });
+    if (updated) await db.insert(invoiceEvents).values({ invoiceId, type: "sent", method, at: sentAt });
+    refresh();
+    revalidatePath("/portal");
+    return { ok: "Marked as sent." };
+  });
+}
+
+/** Undo "Mark as sent" (for mistakes). Puts the invoice back to a draft. */
+export async function markInvoiceUnsent(invoiceId: string) {
+  await requireAdmin();
+  const db = await getDb();
+  const inv = await db.query.invoices.findFirst({ where: eq(invoices.id, invoiceId) });
+  if (!inv || inv.status !== "open" || inv.stripeInvoiceId) redirect(`/admin/invoices/${invoiceId}`);
+  await db.batch([
+    db.update(invoices).set({ status: "draft", sentAt: null }).where(eq(invoices.id, invoiceId)),
+    db.insert(invoiceEvents).values({ invoiceId, type: "undone", note: "Sending undone — back to draft" }),
+  ]);
+  refresh();
+  revalidatePath("/portal");
+}
+
+/** Saves a payment reminder to the invoice's history. */
+export async function logReminder(invoiceId: string, method: string, note?: string) {
+  await requireAdmin();
+  if (!(CONTACT_METHODS as readonly string[]).includes(method)) return;
+  const db = await getDb();
+  const inv = await db.query.invoices.findFirst({ where: eq(invoices.id, invoiceId) });
+  if (!inv || inv.status !== "open") return;
+  await db.insert(invoiceEvents).values({ invoiceId, type: "reminder", method, note: note?.trim().slice(0, 300) || null });
+  refresh();
+}
+
+export async function logReminderForm(invoiceId: string, _prev: ActionState, form: FormData): Promise<ActionState> {
+  await requireAdmin();
+  return handle(async () => {
+    const method = oneOf(form, "method", CONTACT_METHODS, "Pick how you reminded them.");
+    await logReminder(invoiceId, method, text(form, "note", { max: 300 }) ?? undefined);
+    return { ok: "Reminder saved." };
+  });
 }
 
 /** Deletes a draft. Its visits go back to "ready to bill". */

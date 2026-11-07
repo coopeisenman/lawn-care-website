@@ -1,6 +1,6 @@
 // Database tables. Changing this file? Run `npm run db:generate` to create a migration.
 import { sql } from "drizzle-orm";
-import { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS } from "../constants";
+import { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS, INVOICE_EVENT_TYPES } from "../constants";
 import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export { SERVICE_TYPES, RECURRENCES, SERVICE_STATUSES, INVOICE_STATUSES, PAYMENT_METHODS };
@@ -190,4 +190,21 @@ export const invoiceLineItems = sqliteTable(
     ...timestamps,
   },
   (t) => [index("invoice_line_items_invoice_id_idx").on(t.invoiceId)],
+);
+
+// History of each invoice: when it was sent, every reminder, payment, and any undo.
+export const invoiceEvents = sqliteTable(
+  "invoice_events",
+  {
+    id: id(),
+    invoiceId: text("invoice_id")
+      .notNull()
+      .references(() => invoices.id, { onDelete: "cascade" }),
+    type: text("type", { enum: INVOICE_EVENT_TYPES }).notNull(),
+    // in_person, text, email, phone, mail, other, stripe, cash, check
+    method: text("method"),
+    note: text("note"),
+    at: integer("at", { mode: "timestamp_ms" }).notNull().default(now),
+  },
+  (t) => [index("invoice_events_invoice_id_idx").on(t.invoiceId, t.at)],
 );

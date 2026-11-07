@@ -266,3 +266,10 @@ i.k-completed { opacity: .4; }
 .preview-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #e6e1d4; }
 .preview-header .btn { pointer-events: none; opacity: .6; }
 .preview-body { padding: 28px 20px 8px; }
+.badge-red { background: #fbe4e1; color: #8a2016; }
+.history { list-style: none; display: grid; gap: 10px; }
+.history li { display: grid; grid-template-columns: 12px 1fr; gap: 10px; font-size: .95rem; }
+.history li::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--leaf); margin-top: 7px; }
+.history li.h-reminder::before { background: var(--amber); }
+.history li.h-undone::before { background: #b3b0a6; }
+.history .meta { display: block; }

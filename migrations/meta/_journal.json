@@ -15,6 +15,13 @@
       "when": 1794032980335,
       "tag": "0001_payments",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794063086893,
+      "tag": "0002_invoice_events",
+      "breakpoints": true
     }
   ]
 }
