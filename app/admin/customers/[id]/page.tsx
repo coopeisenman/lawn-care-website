@@ -167,7 +167,10 @@ export default async function CustomerPage({
 
         <div>
           <div className="panel">
-            <h2>Customer portal</h2>
+            <div className="panel-head">
+              <h2>Customer portal</h2>
+              <Link href={`/admin/customers/${id}/preview`} className="btn btn-outline btn-sm">Preview</Link>
+            </div>
             {c.userId ? (
               <>
                 <p className="meta" style={{ marginBottom: 14 }}>

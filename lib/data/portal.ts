@@ -1,13 +1,26 @@
 import "server-only";
 import { and, asc, desc, eq, gte, inArray } from "drizzle-orm";
 import { getDb } from "../db";
-import { properties, services, invoices } from "../db/schema";
-import { requireCustomer } from "../session";
+import { customers, properties, services, invoices } from "../db/schema";
+import { requireAdmin, requireCustomer } from "../session";
 import { todayLocal } from "../format";
 
 // Everything a customer sees. The customer id always comes from their login.
 export async function getPortalData() {
   const { customer } = await requireCustomer();
+  return loadPortalData(customer);
+}
+
+/** Owner-only: what a given customer would see in their portal. */
+export async function getPortalPreview(customerId: string) {
+  await requireAdmin();
+  const db = await getDb();
+  const customer = await db.query.customers.findFirst({ where: eq(customers.id, customerId) });
+  return customer ? loadPortalData(customer) : null;
+}
+
+// Not exported: callers above check who is asking before loading anything.
+async function loadPortalData(customer: typeof customers.$inferSelect) {
   const db = await getDb();
 
   const myProperties = await db
