@@ -117,9 +117,9 @@ export default function HomePage() {
               <svg viewBox="0 0 400 340" preserveAspectRatio="xMidYMid slice">
                 <rect width="400" height="340" fill="#f4c27a" />
                 <circle cx="290" cy="150" r="60" fill="#e9a23b" />
-                <path d="M0 200 Q100 150 200 190 T400 170 V340 H0Z" fill="#2f7a45" />
+                <path d="M0 200 Q100 150 200 190 T400 170 V340 H0Z" fill="#5c943c" />
                 <path d="M0 240 Q120 200 240 235 T400 220 V340 H0Z" fill="#1f4d2c" />
-                <g fill="#3f8f55">
+                <g fill="#6fa64d">
                   <rect x="0" y="280" width="400" height="16" opacity=".5" />
                   <rect x="0" y="312" width="400" height="16" opacity=".5" />
                 </g>
